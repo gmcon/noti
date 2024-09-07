@@ -1,36 +1,28 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-let interacciones = 0;
-let notificacionActual = "No hay nuevas notificaciones.";
+// Middleware para procesar JSON
+app.use(express.json());
 
-// Middleware para servir archivos estáticos como HTML, CSS, y JS
-app.use(express.static(__dirname));
-
-// API para obtener notificaciones
-app.get('/api/notificaciones', (req, res) => {
-    res.json({ mensaje: notificacionActual });
+// Ruta para recibir la notificación
+app.post('/actualizar-notificacion', (req, res) => {
+    const { notificacion } = req.body;
+    if (notificacion) {
+        // Aquí procesas la notificación. Puedes almacenarla, mostrarla o lo que necesites hacer con ella.
+        console.log(`Nueva notificación: ${notificacion}`);
+        res.json({ mensaje: 'Notificación actualizada correctamente.' });
+    } else {
+        res.status(400).json({ mensaje: 'No se proporcionó una notificación.' });
+    }
 });
 
-// API para registrar la interacción del usuario
-app.post('/api/registrar', (req, res) => {
-    interacciones += 1;
-    res.json({ mensaje: `Interacción registrada. Total: ${interacciones}` });
+// Ruta principal
+app.get('/', (req, res) => {
+    res.send('¡Servidor funcionando correctamente!');
 });
 
 // Iniciar el servidor
 app.listen(port, () => {
-    console.log(`Servidor escuchando en http://localhost:${port}`);
-});
-
-// nueva notificacion
-app.post('/api/actualizar-notificacion', express.json(), (req, res) => {
-    const nuevaNotificacion = req.body.notificacion;
-    if (nuevaNotificacion) {
-        notificacionActual = nuevaNotificacion;
-        res.json({ mensaje: 'Notificación actualizada correctamente.' });
-    } else {
-        res.status(400).json({ mensaje: 'Error: Notificación no proporcionada.' });
-    }
+    console.log(`Servidor corriendo en el puerto ${port}`);
 });
