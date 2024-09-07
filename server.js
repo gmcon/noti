@@ -9,7 +9,6 @@ app.use(express.json());
 app.post('/actualizar-notificacion', (req, res) => {
     const { notificacion } = req.body;
     if (notificacion) {
-        // Aquí procesas la notificación. Puedes almacenarla, mostrarla o lo que necesites hacer con ella.
         console.log(`Nueva notificación: ${notificacion}`);
         res.json({ mensaje: 'Notificación actualizada correctamente.' });
     } else {
