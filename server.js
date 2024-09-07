@@ -1,24 +1,19 @@
 const express = require('express');
+const fs = require('fs');  // Para leer archivos
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware para procesar JSON
-app.use(express.json());
-
-// Ruta para recibir la notificación
-app.post('/actualizar-notificacion', (req, res) => {
-    const { notificacion } = req.body;
-    if (notificacion) {
-        console.log(`Nueva notificación: ${notificacion}`);
-        res.json({ mensaje: 'Notificación actualizada correctamente.' });
-    } else {
-        res.status(400).json({ mensaje: 'No se proporcionó una notificación.' });
-    }
-});
-
-// Ruta principal
+// Ruta principal para mostrar la notificación
 app.get('/', (req, res) => {
-    res.send('¡Servidor funcionando correctamente!');
+    fs.readFile('notificacion.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error al leer el archivo notificacion.json:', err);
+            return res.status(500).send('Error al leer la notificación.');
+        }
+        
+        const notificacion = JSON.parse(data).notificacion;
+        res.send(`<h1>Notificación actual: ${notificacion}</h1>`);
+    });
 });
 
 // Iniciar el servidor
