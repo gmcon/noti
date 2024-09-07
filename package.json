@@ -2,7 +2,7 @@
   "dependencies": {
     "express": "^4.19.2"
   },
-  "name": "noti",
+  "name": "notificaciones_app",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
