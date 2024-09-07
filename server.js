@@ -8,26 +8,25 @@ const port = process.env.PORT || 3000;
 app.use(express.static('public'));
 
 // Ruta principal para mostrar la notificación
-app.get('/', (req, res) => {
-    // Utilizamos path.join para asegurar que la ruta del archivo sea correcta en cualquier sistema operativo
+app.get('/api/notificaciones', (req, res) => {
     const filePath = path.join(__dirname, 'notificacion.json');
 
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
             console.error('Error al leer el archivo notificacion.json:', err);
-            return res.status(500).send('Error al leer la notificación.');
+            return res.status(500).json({ error: 'Error al leer la notificación.' });
         }
-        
-        // Intentamos parsear el archivo como JSON
+
         try {
             const notificacion = JSON.parse(data).notificacion;
-            res.send(`<h1>Notificación actual: ${notificacion}</h1>`);
+            res.json({ mensaje: notificacion });
         } catch (jsonErr) {
             console.error('Error al parsear el archivo JSON:', jsonErr);
-            res.status(500).send('Error al procesar la notificación.');
+            res.status(500).json({ error: 'Error al procesar la notificación.' });
         }
     });
 });
+
 
 // Ruta API para obtener la notificación en formato JSON (para tu main.js o frontend)
 app.get('/api/notificaciones', (req, res) => {
